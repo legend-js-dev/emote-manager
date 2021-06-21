@@ -14,7 +14,7 @@ module.exports = {
  let embed = new Discord.MessageEmbed()
                 embed.setAuthor(message.author.tag, message.author.displayAvatarURL())
                 embed.setDescription(`**There are no emojis in this Server to backup.** `)
-                embed.setFooter(message.guild.name + " | made by LΣGΣПD#0001 & ant#0768", message.guild.iconURL());
+                embed.setFooter(message.guild.name + " | made by legendjs#0001 & ant#0768", message.guild.iconURL());
 embed.setColor("#FF0000")
 embed.setTimestamp()
             return message.channel.send({ embed: embed });
@@ -34,7 +34,7 @@ embed.setTimestamp()
 let embed = new Discord.MessageEmbed()
                 embed.setAuthor(message.author.tag, message.author.displayAvatarURL())
                 embed.setDescription(`**The backup has been created, The backup ID has been sent to your dms!**`)
-                embed.setFooter(message.guild.name + " | made by LΣGΣПD#0001 & ant#0768", message.guild.iconURL());
+                embed.setFooter(message.guild.name + " | made by legendjs#0001 & ant#0768", message.guild.iconURL());
 embed.setColor("GREEN")
 embed.setTimestamp()
             return message.channel.send({ embed: embed });
