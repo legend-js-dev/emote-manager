@@ -54,7 +54,7 @@ module.exports = {
 			No.setDescription(`:x: | **backup Not Found**`);
 			No.setColor('#FF0000');
 			No.setFooter(
-				message.guild.name + ' | made by LΣGΣПD#0001',
+				message.guild.name + ' | made by legendjs#0001',
 				message.guild.iconURL()
 			);
 			No.setThumbnail(message.guild.iconURL());
@@ -86,7 +86,7 @@ module.exports = {
 			embed.setAuthor(message.author.tag, message.author.displayAvatarURL());
 			embed.setDescription(`:x: | **The backup was not found!**`);
 			embed.setFooter(
-				message.guild.name + ' | made by LΣGΣПD#0001',
+				message.guild.name + ' | made by legendjs#0001',
 				message.guild.iconURL()
 			);
 			embed.setColor('#FF0000');
