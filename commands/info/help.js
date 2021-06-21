@@ -7,7 +7,7 @@ module.exports = {
 			.setTitle(client.user.username + ' | Help')
 			.setColor('RANDOM')
 			.setFooter(
-				message.guild.name + ' | made by LΣGΣПD#0001 & ant#0768',
+				message.guild.name + ' | made by legendjs#0001 & ant#0768',
 				message.guild.iconURL()
 			)
 			.setDescription(
