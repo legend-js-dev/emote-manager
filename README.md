@@ -1,17 +1,10 @@
-# emote manager Bot
-## This bot was made by legend-js & ant, do not remove credits or you will have copyright issues.
-### Make sure to join The servers below:
-- [Dark Studios (dark codes)](https://discord.gg/devs)
-- [Developers Hub](https://discord.gg/avbmZBrDsk)
-#### Star the repo and fork it, Ty
-###### Things not to do:
-- Dont be dumb
-- Dont remove credits
-- Dont say u created it when u didnt
-- dont copy paste or u will never learn
-##### Things to do:
-- star this repo
-- fork this repo
-- follow me
-- make videos on my projects
-- join devs Hub
+# Emote manager
+## [CREDITS]: This bot was made by legendjs & ant.
+## [UPDATE]: Emote manager V2 will be out soon
+## [ETA]: Before 18th Jan 2022
+### Make sure You do not remove credits.
+#### [SUGGESTION (S)]:
+- Star the repo
+- Fork the repo
+- Follow me to stay updated
+- Join [Developers Hub](https://discord.gg/avbmZBrDsk) for more
