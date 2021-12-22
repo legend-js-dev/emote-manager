@@ -32,10 +32,9 @@ module.exports = {
             if (!name) return message.channel.send("Please provide a name!");
             link = message.attachments.first() ? message.attachments.first().url : emote;
         }
-        message.guild.emojis.create(
-            `${link}`,
-            `${`${name || emoji.name}`}`
-        ).then(em => message.channel.send(em.toString() + " added!")).catch(error => {
+        message.guild.emojis.create(`${link}`, `${`${name || emoji.name}`}`)
+            .then(em => message.channel.send(em.toString() + " added!"))
+            .catch(error => {
             message.channel.send(":x: | an Error occured")
             console.log(error)
         })
