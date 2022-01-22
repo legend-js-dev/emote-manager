@@ -46,20 +46,19 @@ module.exports = {
             let r;
             const filter = function (button) {
                 if (button.user !== interaction.user) 
-                    return button.deferReply();
+                    return button.deferUpdate();
                 
                 return ["previous", "stop", "next"].includes(button.customId) && button.user === interaction.user;
             };
             try {
                 r = await msg.awaitMessageComponent({filter, max: 1, time: 20000, errors: ["time"]})
             } catch (error) {
-                console.log(error);
                 return interaction.followUp("Command timed out.")
             }
             const u = interaction.user;
             if (r.customId == "next") {
                 page++;
-                r.deferReply();
+                r.deferUpdate();
                 let newEmbed = new MessageEmbed().setDescription(list[page]).setFooter({
                         text: `Page ${
                         page + 1
@@ -72,7 +71,7 @@ module.exports = {
                 msg.edit({embeds: [newEmbed], components: [buttons]});
             } else if (r.customId == "previous") {
                 page--;
-                r.deferReply() && refreshButtons(button1, button2, button3)
+                r.deferUpdate() && refreshButtons(button1, button2, button3)
                 let newEmbed = new Discord.MessageEmbed().setDescription(list[page]).setFooter(`Page ${
                     page + 1
                 } of ${
@@ -91,10 +90,7 @@ module.exports = {
             if (! list[page - 1]) 
                 button1.setDisabled(true);
              else if (! list[page + 1]) 
-                button3.setDisabled(true)
-
-            
-
+                button3.setDisabled(true);
         }
     }
 }
