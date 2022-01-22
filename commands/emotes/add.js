@@ -1,43 +1,65 @@
-const Discord = require('discord.js')
-const { parse } = require("twemoji-parser");
-const { MessageEmbed } = require("discord.js");
+const {parse} = require("twemoji-parser");
+const {Permissions, Util} = require("discord.js");
+const isUrl = require("is-url");
 
 module.exports = {
     name: "add",
-    run: async (client, message, args) => {
-        if (!message.member.hasPermission("MANAGE_EMOJIS")) {
-            return message.channel.send(`:x: | **You Don't Have Permission To Use This Command**`)
+    description: "Add an Emoji to the server",
+    options: [
+        {
+            name: "emoji",
+            type: "STRING",
+            description: "The emoji",
+            required: true
         }
-        let isUrl = require("is-url");
+    ],
+    type: "CHAT_INPUT",
+    run: async (client, interaction, args) => {
+        let emoji;
+        let link;
         let type = "";
-        let name = "";
+        let EmojiName = "";
+        if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_EMOJIS)) {
+            return interaction.followUp(`:x: | **You don't have the required permissions to use this command**`)
+        }
         let emote = args.join(" ").match(/<?(a)?:?(\w{2,32}):(\d{17,19})>?/gi);
+        
         if (emote) {
             emote = emote[0];
             type = "emoji";
-            name = args.join(" ").replace(/<?(a)?:?(\w{2,32}):(\d{17,19})>?/gi, "").trim().split(" ")[0];
+            EmojiName = args.join(" ").replace(/<?(a)?:?(\w{2,32}):(\d{17,19})>?/gi, "").trim().split(" ")[0];
         } else {
-            emote = `${args.find(arg => isUrl(arg))}`
-            name = args.find(arg => arg != emote);
+            emote = `${
+                args.find(arg => isUrl(arg))
+            }`
+            EmojiName = args.find(arg => arg != emote);
             type = "url";
         }
-        let emoji = {
+        emoji = {
             name: ""
         };
-        let link;
         if (type == "emoji") {
-            emoji = Discord.Util.parseEmoji(emote);
-            link = `https://cdn.discordapp.com/emojis/${emoji.id}.${emoji.animated ? "gif" : "png"}`
+            emoji = Util.parseEmoji(emote);
+            link = `https://cdn.discordapp.com/emojis/${
+                emoji.id
+            }.${
+                emoji.animated ? "gif" : "png"
+            }`
         } else {
-            if (!name) return message.channel.send("Please provide a name!");
-            link = message.attachments.first() ? message.attachments.first().url : emote;
+            if (!EmojiName) 
+                return interaction.followUp({content: ":x: **Please provide a name!**" });
+            link = emote;
         }
-        message.guild.emojis.create(`${link}`, `${`${name || emoji.name}`}`)
-            .then(em => message.channel.send(em.toString() + " added!"))
-            .catch(error => {
-            message.channel.send(":x: | an Error occured")
-            console.log(error)
+        interaction.guild.emojis.create(`${link}`,
+                `${
+            `${
+                EmojiName || emoji.name
+            }`
+        }`).then(em => interaction.followUp({ content: em.toString() + " added!" })).catch(error => {
+            if (error.code == 30008) {
+                return interaction.followUp({content:":x: **Max Emoji slots reached.**"})
+            }
+            return interaction.followUp(`:x: | an Error occured, Error code: ${error.code}`);
         })
-
     }
 }
