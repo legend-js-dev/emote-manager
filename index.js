@@ -1,71 +1,61 @@
-console.clear();
-console.log('[INFO]: Loading...');
-//emote manager clone bot coded by legend & ant >:D
-const { Client, Collection } = require('discord.js');
-const discord = require('discord.js');
+const Client = require('./Stuructures/legendJsClient');
 const Discord = require('discord.js');
-const { prefix, token } = require('./config.json');
-//dont touch the credits or i will find you and u will have to commit die >:D
-const client = new Client({
-	disableMentions: 'everyone'
-});
+const {token} = require('./config.json');
+const client = new Client({intents: 32767});
 
-client.commands = new Collection();
-client.aliases = new Collection();
-
-['command'].forEach(handler => {
-	require(`./handlers/${handler}`)(client);
-});
-
-const db = require("quick.db")
-
+client.loadCommands();
 console.log('-------------------------------------');
-console.log(`
-██╗     ███████╗ ██████╗ ███████╗███╗   ██╗██████╗         ██╗███████╗
-██║     ██╔════╝██╔════╝ ██╔════╝████╗  ██║██╔══██╗        ██║██╔════╝
-██║     █████╗  ██║  ███╗█████╗  ██╔██╗ ██║██║  ██║        ██║███████╗
-██║     ██╔══╝  ██║   ██║██╔══╝  ██║╚██╗██║██║  ██║   ██   ██║╚════██║
-███████╗███████╗╚██████╔╝███████╗██║ ╚████║██████╔╝██╗╚█████╔╝███████║
-╚══════╝╚══════╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═════╝ ╚═╝ ╚════╝ ╚══════╝
-`);
+console.log('[CREDITS]: made by legend-js | https://github.com/legend-js-dev | legendjs#0001');
 console.log('-------------------------------------');
-console.log(`
- █████╗ ███╗   ██╗████████╗     ██╗███████╗
-██╔══██╗████╗  ██║╚══██╔══╝     ██║██╔════╝
-███████║██╔██╗ ██║   ██║        ██║███████╗
-██╔══██║██║╚██╗██║   ██║   ██   ██║╚════██║
-██║  ██║██║ ╚████║   ██║██╗╚█████╔╝███████║
-╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝╚═╝ ╚════╝ ╚══════╝
-`)
-console.log('-------------------------------------');
-//this took me some time so dont you dare remove credits, if u do remove credits then you will have copy right issues.
+
 client.on('ready', () => {
-	console.log(`[INFO]: Ready on client (${client.user.tag})`);
-	client.user.setActivity('emote manager clone by legend & ant :D', {
-		type: 'WATCHING'
-	});
+    console.log(`[INFO]: Ready on client (${
+        client.user.tag
+    })`);
+    console.log(`[INFO]: watching ${
+        client.guilds.cache.size
+    } Servers, ${
+        client.channels.cache.size
+    } channels & ${
+        client.users.cache.size
+    } users`);
+    console.log('-------------------------------------');
+    client.user.setActivity('you', {type: 'WATCHING'});
 });
 
-client.on('message', async message => {
-	if (message.author.bot) return;
-	if (!message.guild) return;
-	if (!message.content.startsWith(prefix)) return;
-	if (!message.member)
-		message.member = await message.guild.fetchMember(message);
+client.on('interactionCreate', async interaction => {
+    if (interaction.isCommand()) {
+        const cmd = client.commands.get(interaction.commandName);
+        if (!cmd) return interaction.followUp({ content: ':x: | **an Unexpected Error Ocurred**' });
 
-	const args = message.content
-		.slice(prefix.length)
-		.trim()
-		.split(/ +/g);
-	const cmd = args.shift().toLowerCase();
+        await interaction.deferReply({
+            ephemeral: cmd.ephemeral ? true : false
+        }).catch(() => {});
 
-	if (cmd.length === 0) return;
+        const args = [];
 
-	let command = client.commands.get(cmd);
-	if (!command) command = client.commands.get(client.aliases.get(cmd));
-	if (command) command.run(client, message, args, db);
+        for (let option of interaction.options.data) {
+            if (option.type === 'SUB_COMMAND') {
+                if (option.name) 
+                    args.push(option.name);
+                
+                option.options ?. forEach(x => {
+                    if (x.value) 
+                        args.push(x.value);
+                    
+                });
+            } else if (option.value) 
+                args.push(option.value);
+            
+        }
+        interaction.member = interaction.guild.members.cache.get(interaction.user.id);
+
+        cmd.run(client, interaction, args);
+    }
 });
 
-client.login(token).catch(err => {
-	console.log('[ERROR]: Invalid Token Provided');
+client.login(token);
+
+process.on('unhandledRejection', (reason, p) => {
+    console.log('Unhandled Rejection at:', p, 'reason:', reason);
 });
